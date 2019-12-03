@@ -1,6 +1,7 @@
 package com.simulations.mpt.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.simulations.mpt.MptSimulationsApplication;
 import com.simulations.mpt.entity.PortfolioAnalysisRequest;
 import com.simulations.mpt.entity.PortfolioVariables;
 import com.simulations.mpt.service.PortfolioAnalysisService;
@@ -26,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = {MptSimulationsApplication.class})
 @AutoConfigureMockMvc
 public class MptRestControllerTest {
 

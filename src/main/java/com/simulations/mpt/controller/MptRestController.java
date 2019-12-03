@@ -17,9 +17,12 @@ import java.util.List;
 @RestController
 public class MptRestController {
 
-    @Autowired
     private PortfolioAnalysisService portfolioAnalysisService;
 
+    @Autowired
+    public MptRestController(PortfolioAnalysisService portfolioAnalysisService){
+        this.portfolioAnalysisService=portfolioAnalysisService;
+    }
     /**
      * Accepts and processes the requests with the portfolio details to be analyzed using the simulations.
      * After successful processing returns a list of results for each portfolio.
