@@ -1,9 +1,11 @@
 package com.simulations.mpt.framework;
 
-import com.simulations.mpt.simulator.DistributionSupplierTask;
 import com.simulations.mpt.entity.PortfolioAnalysisResult;
+import com.simulations.mpt.simulator.DistributionSupplierTask;
+import com.simulations.mpt.entity.YearlyAnalysisResult;
 import com.simulations.mpt.simulator.PortfolioAnalyzerTask;
 
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 /***
@@ -27,9 +29,9 @@ public class TaskFactories {
      * The value is collected in the outputQueue.
      *
      */
-    public static class DistributionSupplierTaskFactory implements TaskFactory<BlockingQueue<Double>> {
+    public static class DistributionSupplierTaskFactory implements TaskFactory<BlockingQueue<Map<Integer, Double>>> {
         @Override
-        public Runnable createTask(TaskInputParameters taskParameters, BlockingQueue<Double> outputQueue) {
+        public Runnable createTask(TaskInputParameters taskParameters, BlockingQueue<Map<Integer, Double>> outputQueue) {
             return new DistributionSupplierTask(taskParameters, outputQueue);
         }
     }

@@ -1,10 +1,12 @@
 package com.simulations.mpt.controller;
 
-import com.simulations.mpt.service.PortfolioAnalysisService;
 import com.simulations.mpt.entity.PortfolioAnalysisRequest;
 import com.simulations.mpt.entity.PortfolioAnalysisResult;
+import com.simulations.mpt.service.PortfolioAnalysisService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.LinkedList;
