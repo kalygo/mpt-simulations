@@ -16,7 +16,7 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.simulations.mpt"))
-                .paths(PathSelectors.regex("\\/api\\/analysis"))
+                .paths(PathSelectors.regex("\\/api\\/v1\\/analysis"))
                 .build();
     }
 }

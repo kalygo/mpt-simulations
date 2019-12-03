@@ -28,7 +28,7 @@ public class MptRestController {
      * @param portfolioAnalysisRequest
      * @return
      */
-    @PutMapping("/api/analysis")
+    @PutMapping("/api/v1/analysis")
     public List<PortfolioAnalysisResult> analysisResults(@Valid @RequestBody PortfolioAnalysisRequest portfolioAnalysisRequest){
 
         if(portfolioAnalysisRequest.getPortfolios().isEmpty()) return new LinkedList<>();

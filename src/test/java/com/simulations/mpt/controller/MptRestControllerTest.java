@@ -53,7 +53,7 @@ public class MptRestControllerTest {
         request.setNumberOfyears(15);
 
         String requestBody = new ObjectMapper().writeValueAsString(request);
-        mockMvc.perform(MockMvcRequestBuilders.put("/analysis")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/analysis")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isOk());
@@ -71,7 +71,7 @@ public class MptRestControllerTest {
         request.setNumberOfyears(15);
 
         String requestBody = new ObjectMapper().writeValueAsString(request);
-        mockMvc.perform(MockMvcRequestBuilders.put("/analysis")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/analysis")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(requestBody))
                 .andExpect(status().isBadRequest());
