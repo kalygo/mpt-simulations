@@ -3,9 +3,9 @@ package com.simulations.mpt.entity;
 public class PortfolioAnalysisResult {
 
     private String portfolioName;
-    private String bestCase;
-    private String worstCase;
-    private String median;
+    private Double bestCase;
+    private Double worstCase;
+    private Double median;
 
     public String getPortfolioName() {
         return portfolioName;
@@ -15,27 +15,27 @@ public class PortfolioAnalysisResult {
         this.portfolioName = portfolioName;
     }
 
-    public String getBestCase() {
+    public Double getBestCase() {
         return bestCase;
     }
 
-    public void setBestCase(String bestCase) {
+    public void setBestCase(Double bestCase) {
         this.bestCase = bestCase;
     }
 
-    public String getWorstCase() {
+    public Double getWorstCase() {
         return worstCase;
     }
 
-    public void setWorstCase(String worstCase) {
+    public void setWorstCase(Double worstCase) {
         this.worstCase = worstCase;
     }
 
-    public String getMedian() {
+    public Double getMedian() {
         return median;
     }
 
-    public void setMedian(String median) {
+    public void setMedian(Double median) {
         this.median = median;
     }
 

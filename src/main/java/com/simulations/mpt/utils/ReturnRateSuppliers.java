@@ -4,11 +4,17 @@ import com.simulations.mpt.framework.Supplier;
 
 import java.util.Random;
 
+/***
+ * This class encloses different types of implementations for ReturnRateSupplier
+ */
 public class ReturnRateSuppliers {
     public interface ReturnRateSupplier<T> extends Supplier<T> {
     }
 
 
+    /***
+     * This implementation supplies random return rates to ensure a Gaussian distribution based on a mean and standard deviation value
+     */
     public static class GaussianRandomNumberSupplier implements ReturnRateSupplier<Double> {
         private Double mean;
         private Double sd;

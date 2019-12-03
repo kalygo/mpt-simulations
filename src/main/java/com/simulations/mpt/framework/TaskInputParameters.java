@@ -3,7 +3,12 @@ package com.simulations.mpt.framework;
 
 import com.simulations.mpt.utils.ReturnRateSuppliers.ReturnRateSupplier;
 
-public class TaskParameters {
+/***
+ * This is a generic properties class whose instances are used to store and transfer parameters into a runnable task created by the TaskFactory.
+ * The instances need not have all the properties and will have only the necessary properties required for executing the runnable task.
+ *
+ */
+public class TaskInputParameters {
     private String portfolioName;
     private Double initialAmount;
     private ReturnRateSupplier<Double> returnRateSupplier;
@@ -11,14 +16,14 @@ public class TaskParameters {
     private Double inflationRate;
     private int numberOfSimulations;
 
-    public TaskParameters(Double initialAmount, ReturnRateSupplier<Double> returnRateSupplier, int numberOfYears, Double inflationRate) {
+    public TaskInputParameters(Double initialAmount, ReturnRateSupplier<Double> returnRateSupplier, int numberOfYears, Double inflationRate) {
         this.initialAmount = initialAmount;
         this.returnRateSupplier = returnRateSupplier;
         this.numberOfYears = numberOfYears;
         this.inflationRate = inflationRate;
     }
 
-    public TaskParameters(String portfolioName, Double initialAmount, ReturnRateSupplier<Double> returnRateSupplier, int numberOfYears, Double inflationRate, int numberOfSimulations) {
+    public TaskInputParameters(String portfolioName, Double initialAmount, ReturnRateSupplier<Double> returnRateSupplier, int numberOfYears, Double inflationRate, int numberOfSimulations) {
         this.portfolioName = portfolioName;
         this.initialAmount = initialAmount;
         this.returnRateSupplier = returnRateSupplier;

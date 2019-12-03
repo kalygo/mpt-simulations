@@ -1,10 +1,27 @@
 package com.simulations.mpt.entity;
 
 
+import javax.validation.constraints.*;
+
+/**
+ * TODO: The validation criteria provided here are for demonstration purposes of validation.
+ *
+ */
 public class PortfolioVariables {
 
+    @NotNull
+    @NotBlank
+    @Size(min=1, max=100)
     private String name;
+
+    @NotNull
+    @Min(-100)
+    @Max(100)
     private Double meanReturnRate;
+
+    @NotNull
+    @Min(-100)
+    @Max(100)
     private Double standardDeviation;
 
     public String getName() {

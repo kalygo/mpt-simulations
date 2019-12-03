@@ -5,42 +5,50 @@ import com.simulations.mpt.entity.PortfolioVariables;
 import com.simulations.mpt.entity.PortfolioAnalysisRequest;
 import com.simulations.mpt.entity.PortfolioAnalysisResult;
 import com.simulations.mpt.framework.*;
-import com.simulations.mpt.framework.TaskFactories.PortfolioAnalysisTaskFactory;
-import com.simulations.mpt.framework.TaskParametersSuppliers.PortfolioAnalysisTaskParametersSupplier;
+import com.simulations.mpt.framework.TaskFactories.PortfolioAnalyzerTaskFactory;
+import com.simulations.mpt.framework.Assemblers.PortfolioAnalysisResultsAccumulator;
+import com.simulations.mpt.framework.TaskParametersSuppliers.ListBasedTaskParametersSupplier;
 import com.simulations.mpt.utils.ReturnRateSuppliers.GaussianRandomNumberSupplier;
 import com.simulations.mpt.utils.ReturnRateSuppliers.ReturnRateSupplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+/***
+ * Used for analyzing the different portfolios by simulating the portfolio projections over the next few years
+ * and selecting the best, worst and median cases
+ *
+ */
 @Service
 public class PortfolioAnalysisService {
 
+    private static Logger logger = LoggerFactory.getLogger(PortfolioAnalysisService.class);
+
     public List<PortfolioAnalysisResult> analyze(PortfolioAnalysisRequest input){
 
-        List<PortfolioAnalysisResult> outputList = new LinkedList<>();
+        Supplier<TaskInputParameters> taskInputSupplier = new ListBasedTaskParametersSupplier(createIndividualTaskInputs(input));
+        TaskManager portfolioAnalyzer = new TaskManager<>(new PortfolioAnalyzerTaskFactory(), taskInputSupplier);
+        PortfolioAnalysisResultsAccumulator accumulator = new PortfolioAnalysisResultsAccumulator(portfolioAnalyzer);
 
-        Supplier<TaskParameters> taskParamSupplier = new PortfolioAnalysisTaskParametersSupplier(createPortfolioAnalysisParameters(input));
-        Supplier<PortfolioAnalysisResult> portfolioAnalysis =
-                new TaskExecutor<>(new PortfolioAnalysisTaskFactory(), taskParamSupplier);
-
-        portfolioAnalysis.initialize();
-        for(int i=0;i<portfolioAnalysis.size();i++){
-            outputList.add(portfolioAnalysis.get());
-        }
-        portfolioAnalysis.close();
-
-        System.out.println(outputList.toString());
-
-        return outputList;
+        List<PortfolioAnalysisResult> accumulatedOutput = accumulator.execute();
+        logger.info("portfolio analysis result -> "+accumulatedOutput);
+        return accumulatedOutput;
     }
 
-    private List<TaskParameters> createPortfolioAnalysisParameters(PortfolioAnalysisRequest input) {
-        List<TaskParameters> portfolioAnalysisTaskParameters = new LinkedList<>();
+    /***
+     * Uses the list of PortfolioVariables in the PortfolioAnalysisRequest instance to prepare the input for the simulations of each portfolio
+     *
+     * @param input
+     * @return
+     */
+    private List<TaskInputParameters> createIndividualTaskInputs(PortfolioAnalysisRequest input) {
+        List<TaskInputParameters> portfolioAnalysisTaskParameters = new LinkedList<>();
 
         for(PortfolioVariables v : input.getPortfolios()) {
             ReturnRateSupplier<Double> returnRateSupplier = new GaussianRandomNumberSupplier(v.getMeanReturnRate(), v.getStandardDeviation());
-            portfolioAnalysisTaskParameters.add(new TaskParameters(
+            portfolioAnalysisTaskParameters.add(new TaskInputParameters(
                     v.getName(),
                     input.getIntialAmount(),
                     returnRateSupplier,

@@ -1,20 +1,29 @@
 package com.simulations.mpt.framework;
 
 
-import com.simulations.mpt.utils.ReturnRateSuppliers;
 import com.simulations.mpt.utils.ReturnRateSuppliers.ReturnRateSupplier;
 
 import java.util.Iterator;
 import java.util.List;
 
+/***
+ * This class encloses different classes implementing Supplier<TaskInputParameters>.
+ * These implementations can be used for supplying TaskInputParameters necessary for creating runnable tasks by a TaskFactory
+ *
+ *
+ */
 public class TaskParametersSuppliers {
 
 
-    public static class PortfolioAnalysisTaskParametersSupplier implements Supplier<TaskParameters> {
-        List<TaskParameters> taskParameters;
-        Iterator<TaskParameters> taskParametersIterator;
+    /***
+     * This is a TaskParameterSupplier backed by a list internally and accepts an already fixed list of TaskInputParameters during construction
+     *
+     */
+    public static class ListBasedTaskParametersSupplier implements Supplier<TaskInputParameters> {
+        List<TaskInputParameters> taskParameters;
+        Iterator<TaskInputParameters> taskParametersIterator;
 
-        public PortfolioAnalysisTaskParametersSupplier(List<TaskParameters> taskParameters) {
+        public ListBasedTaskParametersSupplier(List<TaskInputParameters> taskParameters) {
             this.taskParameters=taskParameters;
             this.taskParametersIterator=taskParameters.iterator();
         }
@@ -35,13 +44,21 @@ public class TaskParametersSuppliers {
         }
 
         @Override
-        public TaskParameters get() {
+        public TaskInputParameters get() {
             return taskParametersIterator.next();
         }
     }
 
-
-    public static class DistributionsGenerationTaskParametersSupplier implements Supplier<TaskParameters> {
+    /***
+     * This is a customized TaskParameterSupplier which will supply the set variable parameters required by each DistributionSupplierTask
+     * for generating the distribution
+     *
+     * Note:
+     * The returnRateSupplier supplies a different returnRate as per its implementation (a random value) and this makes the set of variables different from another set.
+     * The TaskManager then uses these different set of variables to compute different distributions
+     *
+     */
+    public static class DistributionGenerationVariableSupplier implements Supplier<TaskInputParameters> {
 
         private Double initialAmount;
         private ReturnRateSupplier<Double> returnRateGenerator;
@@ -50,7 +67,7 @@ public class TaskParametersSuppliers {
         private int size;
 
 
-        public DistributionsGenerationTaskParametersSupplier(Double initialAmount, ReturnRateSupplier<Double> returnRateGenerator, int numberOfYears, Double inflationRate, int size){
+        public DistributionGenerationVariableSupplier(Double initialAmount, ReturnRateSupplier<Double> returnRateGenerator, int numberOfYears, Double inflationRate, int size){
             this.initialAmount =initialAmount;
             this.returnRateGenerator=returnRateGenerator;
             this.numberOfYears=numberOfYears;
@@ -74,8 +91,8 @@ public class TaskParametersSuppliers {
         }
 
         @Override
-        public TaskParameters get() {
-            return  new TaskParameters(initialAmount, returnRateGenerator, numberOfYears, inflationRate);
+        public TaskInputParameters get() {
+            return  new TaskInputParameters(initialAmount, returnRateGenerator, numberOfYears, inflationRate);
         }
     }
 }
