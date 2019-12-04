@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
 
 /***
  * Used for analyzing the different portfolios by simulating the portfolio projections over the next few years
@@ -29,7 +30,7 @@ public class PortfolioAnalysisService {
     public List<PortfolioAnalysisResult> analyze(PortfolioAnalysisRequest input){
 
         Supplier<TaskInputParameters> taskInputSupplier = new ListBasedTaskParametersSupplier(createIndividualTaskInputs(input));
-        TaskManager portfolioAnalyzer = new TaskManager<>(new PortfolioAnalyzerTaskFactory(), taskInputSupplier);
+        TaskManager<PortfolioAnalysisResult, BlockingQueue<PortfolioAnalysisResult>> portfolioAnalyzer = new TaskManager<>(new PortfolioAnalyzerTaskFactory(), taskInputSupplier);
         PortfolioAnalysisResultsAccumulator accumulator = new PortfolioAnalysisResultsAccumulator(portfolioAnalyzer);
 
         List<PortfolioAnalysisResult> accumulatedOutput = accumulator.execute();

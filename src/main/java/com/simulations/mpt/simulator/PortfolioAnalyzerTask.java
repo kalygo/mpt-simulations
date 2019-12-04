@@ -36,7 +36,7 @@ public class PortfolioAnalyzerTask implements Runnable {
                 portfolioProperties.getNumberOfYears(),
                 portfolioProperties.getInflationRate(),
                 portfolioProperties.getNumberOfSimulations());
-        TaskManager distributionSupplier = new TaskManager<>(new DistributionSupplierTaskFactory(), taskInputSupplier);
+        TaskManager<Double, BlockingQueue<Double>> distributionSupplier = new TaskManager<>(new DistributionSupplierTaskFactory(), taskInputSupplier);
 
         PerformancePercentileCalculator calculator = new PerformancePercentileCalculator(portfolioProperties, distributionSupplier);
         try {
