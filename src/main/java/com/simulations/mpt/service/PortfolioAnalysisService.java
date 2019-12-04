@@ -1,9 +1,10 @@
 package com.simulations.mpt.service;
 
 
+import com.simulations.mpt.entity.PortfolioAnalysisResult;
 import com.simulations.mpt.entity.PortfolioVariables;
 import com.simulations.mpt.entity.PortfolioAnalysisRequest;
-import com.simulations.mpt.entity.PortfolioAnalysisResult;
+import com.simulations.mpt.entity.YearlyAnalysisResult;
 import com.simulations.mpt.framework.*;
 import com.simulations.mpt.framework.TaskFactories.PortfolioAnalyzerTaskFactory;
 import com.simulations.mpt.framework.Assemblers.PortfolioAnalysisResultsAccumulator;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.concurrent.BlockingQueue;
 
 /***
  * Used for analyzing the different portfolios by simulating the portfolio projections over the next few years
@@ -29,7 +31,7 @@ public class PortfolioAnalysisService {
     public List<PortfolioAnalysisResult> analyze(PortfolioAnalysisRequest input){
 
         Supplier<TaskInputParameters> taskInputSupplier = new ListBasedTaskParametersSupplier(createIndividualTaskInputs(input));
-        TaskManager portfolioAnalyzer = new TaskManager<>(new PortfolioAnalyzerTaskFactory(), taskInputSupplier);
+        TaskManager<PortfolioAnalysisResult, BlockingQueue<PortfolioAnalysisResult>> portfolioAnalyzer = new TaskManager<>(new PortfolioAnalyzerTaskFactory(), taskInputSupplier);
         PortfolioAnalysisResultsAccumulator accumulator = new PortfolioAnalysisResultsAccumulator(portfolioAnalyzer);
 
         List<PortfolioAnalysisResult> accumulatedOutput = accumulator.execute();
