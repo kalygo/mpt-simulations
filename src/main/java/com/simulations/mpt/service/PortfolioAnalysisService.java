@@ -1,9 +1,10 @@
 package com.simulations.mpt.service;
 
 
+import com.simulations.mpt.entity.PortfolioAnalysisResult;
 import com.simulations.mpt.entity.PortfolioVariables;
 import com.simulations.mpt.entity.PortfolioAnalysisRequest;
-import com.simulations.mpt.entity.PortfolioAnalysisResult;
+import com.simulations.mpt.entity.YearlyAnalysisResult;
 import com.simulations.mpt.framework.*;
 import com.simulations.mpt.framework.TaskFactories.PortfolioAnalyzerTaskFactory;
 import com.simulations.mpt.framework.Assemblers.PortfolioAnalysisResultsAccumulator;

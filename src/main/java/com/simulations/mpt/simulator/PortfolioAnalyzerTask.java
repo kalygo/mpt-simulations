@@ -1,14 +1,15 @@
 package com.simulations.mpt.simulator;
 
-import com.simulations.mpt.framework.*;
 import com.simulations.mpt.entity.PortfolioAnalysisResult;
+import com.simulations.mpt.framework.*;
+import com.simulations.mpt.entity.YearlyAnalysisResult;
 import com.simulations.mpt.framework.Assemblers.PerformancePercentileCalculator;
 import com.simulations.mpt.framework.TaskFactories.DistributionSupplierTaskFactory;
 import com.simulations.mpt.framework.TaskParametersSuppliers.DistributionGenerationVariableSupplier;
-import com.simulations.mpt.service.PortfolioAnalysisService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 /***
