@@ -5,6 +5,8 @@ import com.simulations.mpt.utils.PortfolioValueProjectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 /***
@@ -22,22 +24,24 @@ public class DistributionSupplierTask implements Runnable {
     private static Logger logger = LoggerFactory.getLogger(DistributionSupplierTask.class);
 
     private TaskInputParameters distributionVariables;
-    private BlockingQueue<Double> distributionOutputQueue;
+    private BlockingQueue<Map<Integer, Double>> distributionOutputQueue;
 
-    public DistributionSupplierTask(TaskInputParameters distributionVariables, BlockingQueue<Double> distributionOutputQueue){
+    public DistributionSupplierTask(TaskInputParameters distributionVariables, BlockingQueue<Map<Integer, Double>> distributionOutputQueue){
         this.distributionVariables = distributionVariables;
         this.distributionOutputQueue = distributionOutputQueue;
     }
 
     @Override
     public void run() {
+        Map<Integer, Double> yearToValueMap = new HashMap<>();
         Double currentPortFolioValue = distributionVariables.getInitialAmount();
-        for(int yearNumber = 0; yearNumber < distributionVariables.getNumberOfYears(); yearNumber++) {
+        for(int yearNumber = 1; yearNumber <= distributionVariables.getNumberOfYears(); yearNumber++) {
             PortfolioValueProjectors.PortfolioValueProjector pvProjector = new PortfolioValueProjectors.InflationAdjustedPortfolioValueProjector(currentPortFolioValue, distributionVariables.getReturnRateSupplier().get(), distributionVariables.getInflationRate());
             currentPortFolioValue = pvProjector.evaluate();
+            yearToValueMap.put(yearNumber, currentPortFolioValue);
         }
         try {
-            distributionOutputQueue.put(currentPortFolioValue);
+            distributionOutputQueue.put(yearToValueMap);
         } catch (InterruptedException e) {
             logger.error("Exception occurred during processing - ",e);
         }

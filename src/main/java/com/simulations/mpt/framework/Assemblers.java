@@ -1,11 +1,9 @@
 package com.simulations.mpt.framework;
 
 import com.simulations.mpt.entity.PortfolioAnalysisResult;
+import com.simulations.mpt.entity.YearlyAnalysisResult;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Assemblers {
 
@@ -25,31 +23,49 @@ public class Assemblers {
      */
     public static class PerformancePercentileCalculator implements Assembler<PortfolioAnalysisResult> {
 
-        private Supplier<Double> distributionSupplier;
+        private Supplier<Map<Integer, Double>> distributionSupplier;
         private TaskInputParameters porfolioProperties;
 
-        public PerformancePercentileCalculator(TaskInputParameters porfolioProperties, Supplier<Double> distributionSupplier){
+        public PerformancePercentileCalculator(TaskInputParameters porfolioProperties, Supplier<Map<Integer, Double>> distributionSupplier){
             this.distributionSupplier = distributionSupplier;
             this.porfolioProperties=porfolioProperties;
         }
         @Override
         public PortfolioAnalysisResult execute() {
-            Set<Double> sortedDistributionsSet = new TreeSet<>();
+            Map<Integer, Set<Double>> yearToSortedValues = new HashMap<>();
             try {
                 distributionSupplier.initialize();
                 for (int i = 0; i < distributionSupplier.size(); i++) {
-                    sortedDistributionsSet.add(distributionSupplier.get());
+                    Map<Integer, Double> yearToValueMap = distributionSupplier.get();
+                    for(Map.Entry<Integer, Double> entry : yearToValueMap.entrySet()) {
+                        if(!yearToSortedValues.containsKey(entry.getKey())){
+                            yearToSortedValues.put(entry.getKey(), new TreeSet<>());
+                        }
+                        yearToSortedValues.get(entry.getKey()).add(entry.getValue());
+                    }
                 }
             } finally {
                 distributionSupplier.close();
             }
-            Double[] sortedDistributionsArray = sortedDistributionsSet.toArray(new Double[sortedDistributionsSet.size()]);
 
             PortfolioAnalysisResult output = new PortfolioAnalysisResult();
             output.setPortfolioName(porfolioProperties.getPortfolioName());
-            output.setMedian(getPercentileValue(sortedDistributionsArray, 50));
-            output.setBestCase(getPercentileValue(sortedDistributionsArray, 90));
-            output.setWorstCase(getPercentileValue(sortedDistributionsArray, 10));
+
+            List<YearlyAnalysisResult> yearlyResults = new LinkedList<>();
+            for(Map.Entry<Integer, Set<Double>> entry : yearToSortedValues.entrySet()){
+                Integer yearNumber = entry.getKey();
+                Set<Double> allDistributionsForTheYear = entry.getValue();
+
+                Double[] sortedDistributionsArray = allDistributionsForTheYear.toArray(new Double[allDistributionsForTheYear.size()]);
+                YearlyAnalysisResult yearlyResult = new YearlyAnalysisResult();
+                yearlyResult.setYearNumber(yearNumber);
+                yearlyResult.setMedian(getPercentileValue(sortedDistributionsArray, 50));
+                yearlyResult.setBestCase(getPercentileValue(sortedDistributionsArray, 90));
+                yearlyResult.setWorstCase(getPercentileValue(sortedDistributionsArray, 10));
+                yearlyResults.add(yearlyResult);
+            }
+            output.setYearlyResults(yearlyResults);
+
             return output;
         }
 

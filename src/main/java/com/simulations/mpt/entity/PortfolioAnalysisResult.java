@@ -1,11 +1,10 @@
 package com.simulations.mpt.entity;
 
-public class PortfolioAnalysisResult {
+import java.util.List;
 
+public class PortfolioAnalysisResult {
     private String portfolioName;
-    private Double bestCase;
-    private Double worstCase;
-    private Double median;
+    private List<YearlyAnalysisResult> yearlyResults;
 
     public String getPortfolioName() {
         return portfolioName;
@@ -15,37 +14,11 @@ public class PortfolioAnalysisResult {
         this.portfolioName = portfolioName;
     }
 
-    public Double getBestCase() {
-        return bestCase;
+    public List<YearlyAnalysisResult> getYearlyResults() {
+        return yearlyResults;
     }
 
-    public void setBestCase(Double bestCase) {
-        this.bestCase = bestCase;
-    }
-
-    public Double getWorstCase() {
-        return worstCase;
-    }
-
-    public void setWorstCase(Double worstCase) {
-        this.worstCase = worstCase;
-    }
-
-    public Double getMedian() {
-        return median;
-    }
-
-    public void setMedian(Double median) {
-        this.median = median;
-    }
-
-    @Override
-    public String toString() {
-        return "PerformanceAnalysisResult{" +
-                "portfolioName='" + portfolioName + '\'' +
-                ", bestCase='" + bestCase + '\'' +
-                ", worstCase='" + worstCase + '\'' +
-                ", median='" + median + '\'' +
-                '}';
+    public void setYearlyResults(List<YearlyAnalysisResult> yearlyResults) {
+        this.yearlyResults = yearlyResults;
     }
 }
